@@ -1,24 +1,22 @@
+
 import { Entity, Column, PrimaryGeneratedColumn} from 'typeorm'
 
 @Entity('auth')
-export class Auth {
+export class RefreshToken {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
   user_id  // FK
 
-  @Column() 
-  passwordHash  // hash password only for local registration
+  @Column()
+  token
 
   @Column()
-  authProvider // 'local', 'google', 'github', 'facebook'
+  expireAt
 
   @Column()
-  isVerfied // true false
-
-  @Column()
-  lastLoginAt // datetime for audit use
+  revoked
 
   @Column()
   createAt
