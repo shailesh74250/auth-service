@@ -4,7 +4,8 @@ import { AuthController } from './controllers/auth.controller';
 import { HttpModule } from '@nestjs/axios';
 
 @Module({
-  controllers: [AuthController, HttpModule],
+  imports: [HttpModule],
+  controllers: [AuthController],
   providers: [AuthService],
 })
 export class AuthModule {}

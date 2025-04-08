@@ -1,9 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { RegisterAuthDto } from '../dto/register.dto';
 import { LoginAuthDto } from '../dto/login.dto';
+import { HttpService } from '@nestjs/axios';
+import { firstValueFrom, Observable } from 'rxjs';
+import { AxiosResponse } from 'axios';
 
 @Injectable()
 export class AuthService {
+  constructor(private readonly httpService: HttpService) {}
+
+  async callUserService(url, data, headers): Promise<any>  {
+    const observable = this.httpService.post(url, data, { headers });
+    const response = await firstValueFrom(observable);
+    console.log(response.data);
+    return response.data;
+  }
+
   register(registerAuthDto: RegisterAuthDto) {
     // check user already exis in db
     // if exist return response with message use already exist
@@ -12,10 +24,18 @@ export class AuthService {
     // if user get created in service then send message user gets created
     // send verification token on email or otp on phone number
     // if user verified then mark status as verfied otherwise unverified
+    const url = process.env.USER_SERVICE_API;
+    const headers = {
+      'Content-Type': 'application/json',
+      'x-api-key': process.env.USER_SERVICE_API_KEY,
+    };
+    console.log(url, headers);
     console.log(registerAuthDto)
-    // call user service api http call (synchronouse call)
+    const result = this.callUserService(url, registerAuthDto, headers);
+    console.log({result});
+    // call user service api http or gRPC call (synchronouse call) 
     // for sending email or opt use (asynchronouse event driven approach)
-    return 'This action adds a new auth';
+    return result;
   }
 
   login(loginAuthDto: LoginAuthDto) {
